@@ -26,6 +26,26 @@ public:
         });
     }
 
+    [[eosio::action]]
+    void regcoordinate(name company_name, double latitude, double longitude) {
+        require_auth(company_name);
+        auto existing_company = _companies.find(company_name.value);
+        eosio::check(existing_company != _companies.end(), "company doesn't exist");
+
+        coordinates coordinates_table(get_self(), company_name.value);
+        for (auto& item : coordinates_table) {
+            if ((item.latitude == latitude) && (item.longitude == longitude)) {
+                eosio::check(false, "coordinate already exists");
+            }
+        }
+
+        coordinates_table.emplace(get_self(), [&](auto& p) {
+            p.id = coordinates_table.available_primary_key();
+            p.latitude = latitude;
+            p.longitude = longitude;
+        });
+    }
+
 private:
     // scope: this contract
     struct [[eosio::table]] company {
