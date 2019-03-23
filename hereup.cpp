@@ -69,4 +69,4 @@ private:
     companies _companies;
 };
 
-EOSIO_DISPATCH(hereup, (hi)(regcompany))
+EOSIO_DISPATCH(hereup, (hi)(regcompany)(regcoordinate))
