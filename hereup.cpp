@@ -46,6 +46,14 @@ public:
         });
     }
 
+    [[eosio::action]]
+    void clear(name key) {
+        coordinates coordinates_table(get_self(), key.value);
+        for (auto c = coordinates_table.begin(); c != coordinates_table.end(); ) {
+            c = coordinates_table.erase(c);
+        }
+    }
+
 private:
     // scope: this contract
     struct [[eosio::table]] company {
@@ -57,8 +65,8 @@ private:
     // scope: company account
     struct [[eosio::table]] coordinate {
         uint64_t id;
-        long double latitude;
-        long double longitude;
+        double latitude;
+        double longitude;
 
         uint64_t primary_key() const { return id; }
     };
@@ -69,4 +77,4 @@ private:
     companies _companies;
 };
 
-EOSIO_DISPATCH(hereup, (hi)(regcompany)(regcoordinate))
+EOSIO_DISPATCH(hereup, (hi)(regcompany)(regcoordinate)(clear))
